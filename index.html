@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life - Classic Macintosh</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <filter id="glass-distortion" x="-50%" y="-50%" width="200%" height="200%">
+                <feTurbulence baseFrequency="0.1 0.1" numOctaves="3" result="turbulence"/>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="2"/>
+            </filter>
+        </defs>
+    </svg>
+    <div class="app-container">
+        <header class="header">
+            <h1>Conway's Game of Life</h1>
+            <p class="subtitle">Cellular Automaton Simulator</p>
+        </header>
+
+        <main class="main-content">
+            <div class="canvas-container">
+                <canvas id="gameCanvas"></canvas>
+
+            </div>
+
+            <aside class="controls-panel">
+                <div class="control-group">
+                    <h3>Simulation</h3>
+                    <div class="button-group">
+                        <button id="playPauseBtn" class="liquid-glass">
+                            <span class="glass-text">Play</span>
+                        </button>
+                        <button id="resetBtn" class="liquid-glass">
+                            <span class="glass-text">Reset</span>
+                        </button>
+                        <button id="randomBtn" class="liquid-glass">
+                            <span class="glass-text">Random</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Speed</h3>
+                    <input type="range" id="speedSlider" min="1" max="60" value="10" class="slider">
+                    <span id="speedDisplay">10 fps</span>
+                </div>
+
+                <div class="control-group">
+                    <h3>Volume</h3>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="30" class="slider">
+                    <span id="volumeDisplay">30%</span>
+                </div>
+
+                <div class="control-group">
+                    <h3>Patterns</h3>
+                    <select id="patternSelect" class="select">
+                        <option value="">Select Pattern...</option>
+                        <option value="glider">Glider</option>
+                        <option value="blinker">Blinker</option>
+                        <option value="toad">Toad</option>
+                        <option value="beacon">Beacon</option>
+                        <option value="pulsar">Pulsar</option>
+                        <option value="pentadecathlon">Pentadecathlon</option>
+                    </select>
+                    <div class="button-group">
+                        <button id="loadPatternBtn" class="liquid-glass">
+                            <span class="glass-text">Load</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Info</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-label">Generation:</span>
+                            <span id="generationCount">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Population:</span>
+                            <span id="populationCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <footer class="footer">
+            <p>Click to toggle cells • Drag to paint • Space: Play/Pause • System 7.0 Compatible</p>
+        </footer>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
