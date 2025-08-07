@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conway's Game of Life - Classic Macintosh</title>
+    <title>Game of Life: Generative Music</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
@@ -17,8 +17,8 @@
     </svg>
     <div class="app-container">
         <header class="header">
-            <h1>Conway's Game of Life</h1>
-            <p class="subtitle">Cellular Automaton Simulator</p>
+            <h1>Game of Life: Generative Music</h1>
+            <p class="subtitle">Cellular Automaton Simulator with Generative Music</p>
         </header>
 
         <main class="main-content">
@@ -50,9 +50,20 @@
                 </div>
 
                 <div class="control-group">
-                    <h3>Volume</h3>
-                    <input type="range" id="volumeSlider" min="0" max="100" value="30" class="slider">
-                    <span id="volumeDisplay">30%</span>
+                    <h3>Audio</h3>
+                    <div class="audio-themes">
+                        <button id="chimesBtn" class="liquid-glass theme-btn active" data-theme="chimes">
+                            <span class="glass-text">Chimes</span>
+                        </button>
+                        <button id="organBtn" class="liquid-glass theme-btn" data-theme="organ">
+                            <span class="glass-text">Organ</span>
+                        </button>
+                    </div>
+                    <div class="volume-control">
+                        <label>Volume</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="30" class="slider">
+                        <span id="volumeDisplay">30%</span>
+                    </div>
                 </div>
 
                 <div class="control-group">
