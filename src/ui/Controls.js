@@ -18,6 +18,13 @@ export class Controls {
         this.populationCount = this.getElement('populationCount');
         this.volumeSlider = this.getElement('volumeSlider');
         this.volumeDisplay = this.getElement('volumeDisplay');
+        
+        // Audio theme buttons
+        this.chimesBtn = this.getElement('chimesBtn');
+        this.organBtn = this.getElement('organBtn');
+        
+        // Store reference to sound theme manager (will be set later)
+        this.soundThemeManager = null;
 
         this.setupEventListeners();
         this.setupGameCallbacks();
@@ -79,6 +86,15 @@ export class Controls {
             const volume = parseInt(this.volumeSlider.value) / 100;
             this.setVolume(volume);
             this.updateVolumeDisplay(parseInt(this.volumeSlider.value));
+        });
+
+        // Audio theme buttons
+        this.chimesBtn.addEventListener('click', () => {
+            this.setAudioTheme('chimes');
+        });
+        
+        this.organBtn.addEventListener('click', () => {
+            this.setAudioTheme('synth');
         });
 
         // Keyboard shortcuts
@@ -292,5 +308,42 @@ export class Controls {
      */
     updateVolumeDisplay(volume) {
         this.volumeDisplay.textContent = `${volume}%`;
+    }
+
+    /**
+     * Set the sound theme manager reference
+     */
+    setSoundThemeManager(soundThemeManager) {
+        this.soundThemeManager = soundThemeManager;
+    }
+
+    /**
+     * Set audio theme and update button states
+     */
+    setAudioTheme(themeName) {
+        if (this.soundThemeManager) {
+            this.soundThemeManager.setTheme(themeName);
+            this.updateThemeButtonStates(themeName);
+        }
+    }
+
+    /**
+     * Update theme button visual states
+     */
+    updateThemeButtonStates(activeTheme) {
+        // Remove active class from all theme buttons
+        [this.chimesBtn, this.organBtn].forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Add active class to selected theme button
+        switch (activeTheme) {
+            case 'chimes':
+                this.chimesBtn.classList.add('active');
+                break;
+            case 'synth':
+                this.organBtn.classList.add('active');
+                break;
+        }
     }
 }

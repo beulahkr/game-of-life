@@ -270,6 +270,48 @@ body {
     background: var(--retro-bg);
 }
 
+/* Audio theme buttons */
+.audio-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--spacing-md);
+    justify-content: flex-start;
+}
+
+.theme-btn {
+    width: 65px;
+    height: 24px;
+    font-size: 10px;
+}
+
+.theme-btn.active {
+    background: #D0D0D0;
+    border: 2px inset var(--retro-border);
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.theme-btn.active:hover {
+    background: #D0D0D0;
+}
+
+/* Volume control section */
+.volume-control {
+    border-top: 1px solid var(--retro-border);
+    padding-top: var(--spacing-sm);
+}
+
+.volume-control label {
+    display: block;
+    color: var(--text-retro);
+    font-size: 11px;
+    font-weight: bold;
+    font-family: "Monaco", "Courier New", "Courier", monospace;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
 
 
 

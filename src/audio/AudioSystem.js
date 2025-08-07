@@ -11,6 +11,7 @@ export class AudioSystem {
         this.volume = 0.3;
         this.activeSounds = new Map();
         this.noteMapping = this.createJankoNoteMapping();
+        this.synthesisMethod = 'windchime'; // Default to windchime
         
         this.initializeAudio();
     }
@@ -180,7 +181,7 @@ export class AudioSystem {
     }
 
     /**
-     * Play sound for a cell position
+     * Play sound for a cell position using current synthesis method
      */
     playCellSound(x, y, type = 'birth') {
         const noteData = this.noteMapping.get(`${x},${y}`);
@@ -189,7 +190,24 @@ export class AudioSystem {
         const delay = type === 'birth' ? Math.random() * 0.1 : 0;
         const duration = type === 'birth' ? 2.5 + Math.random() * 1.5 : 1.0;
         
-        this.createWindchimeSound(noteData.frequency, duration, delay);
+        // Use the current synthesis method
+        switch (this.synthesisMethod) {
+            case 'windchime':
+                this.createWindchimeSound(noteData.frequency, duration, delay);
+                break;
+            case 'organ':
+                this.createOrganSound(noteData.frequency, duration, delay);
+                break;
+            default:
+                this.createWindchimeSound(noteData.frequency, duration, delay);
+        }
+    }
+
+    /**
+     * Set the synthesis method for new sounds
+     */
+    setSynthesisMethod(method) {
+        this.synthesisMethod = method;
     }
 
     /**
@@ -226,6 +244,84 @@ export class AudioSystem {
     getNoteForPosition(x, y) {
         return this.noteMapping.get(`${x},${y}`);
     }
+
+    /**
+     * Create organ-like synthesizer sound
+     */
+    createOrganSound(frequency, duration = 2.0, delay = 0) {
+        if (!this.audioContext || !this.isEnabled) return;
+
+        const startTime = this.audioContext.currentTime + delay;
+        
+        // Create multiple oscillators for rich harmonic content like a pipe organ
+        const oscillators = [];
+        const gains = [];
+        
+        // Fundamental frequency (sine wave for smooth organ tone)
+        this.createOrganOscillator(frequency, 0.3, 'sine', startTime, duration, oscillators, gains);
+        
+        // Sub-octave for depth
+        this.createOrganOscillator(frequency / 2, 0.2, 'sine', startTime, duration, oscillators, gains);
+        
+        // Perfect fifth for harmonic richness
+        this.createOrganOscillator(frequency * 1.5, 0.15, 'sine', startTime, duration, oscillators, gains);
+        
+        // Octave harmonic
+        this.createOrganOscillator(frequency * 2, 0.1, 'triangle', startTime, duration, oscillators, gains);
+        
+        // Add subtle vibrato for organic feel
+        const vibrato = this.audioContext.createOscillator();
+        const vibratoGain = this.audioContext.createGain();
+        vibrato.frequency.setValueAtTime(5, startTime);
+        vibrato.type = 'sine';
+        vibratoGain.gain.setValueAtTime(3, startTime);
+        vibrato.connect(vibratoGain);
+        
+        // Apply vibrato to main oscillators
+        oscillators.forEach(osc => {
+            vibratoGain.connect(osc.frequency);
+        });
+        
+        vibrato.start(startTime);
+        vibrato.stop(startTime + duration);
+        
+        return { oscillators, gains, duration };
+    }
+
+    /**
+     * Create organ oscillator with envelope
+     */
+    createOrganOscillator(frequency, amplitude, waveType, startTime, duration, oscillators, gains) {
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        const filter = this.audioContext.createBiquadFilter();
+        
+        oscillator.type = waveType;
+        oscillator.frequency.setValueAtTime(frequency, startTime);
+        
+        // Low-pass filter for warm organ sound
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(frequency * 4, startTime);
+        filter.Q.setValueAtTime(1, startTime);
+        
+        // Organ envelope: gradual attack, sustained tone, gradual release
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.linearRampToValueAtTime(amplitude, startTime + 0.1);
+        gainNode.gain.linearRampToValueAtTime(amplitude * 0.8, startTime + duration * 0.7);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        
+        oscillator.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(this.masterGain);
+        
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+        
+        oscillators.push(oscillator);
+        gains.push(gainNode);
+    }
+
+
 
     /**
      * Resume audio context (call on user interaction)

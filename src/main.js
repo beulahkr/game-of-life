@@ -2,6 +2,7 @@ import { GameOfLife } from './game/GameOfLife.js';
 import { Renderer } from './rendering/Renderer.js';
 import { Controls } from './ui/Controls.js';
 import { AudioSystem } from './audio/AudioSystem.js';
+import { SoundThemeManager } from './audio/SoundThemeManager.js';
 
 /**
  * Main application entry point
@@ -64,6 +65,7 @@ class GameOfLifeApp {
      */
     initializeAudio() {
         this.audioSystem = new AudioSystem();
+        this.soundThemeManager = new SoundThemeManager(this.audioSystem);
         this.game.setAudioSystem(this.audioSystem);
     }
 
@@ -72,6 +74,7 @@ class GameOfLifeApp {
      */
     initializeControls() {
         this.controls = new Controls(this.game, this.renderer);
+        this.controls.setSoundThemeManager(this.soundThemeManager);
     }
 
     /**
