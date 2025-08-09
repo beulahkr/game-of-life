@@ -224,18 +224,17 @@ export class AudioSystem {
 
         notes.forEach((note, index) => {
             const delay = index * 0.05; // 50ms between notes
-            const arpeggioDuration = 0.6; // Shorter duration for arpeggio notes to prevent overlap
             
             // Use the current synthesis method for arpeggio
             switch (this.synthesisMethod) {
                 case 'windchime':
-                    this.createWindchimeSound(note.frequency, arpeggioDuration, delay);
+                    this.createWindchimeSound(note.frequency, 2.0, delay); // Keep original duration for chimes
                     break;
                 case 'organ':
-                    this.createOrganSound(note.frequency, arpeggioDuration, delay);
+                    this.createOrganSound(note.frequency, 0.6, delay); // Shorter duration for organ to prevent overlap
                     break;
                 default:
-                    this.createWindchimeSound(note.frequency, arpeggioDuration, delay);
+                    this.createWindchimeSound(note.frequency, 2.0, delay);
             }
         });
     }
